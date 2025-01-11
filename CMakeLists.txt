@@ -114,7 +114,8 @@ find_package(Qt5 REQUIRED COMPONENTS
     Svg
     OpenGL
     WebSockets
-    Network)
+    Network
+    SerialPort)
 
 set( QT_LINK_LIBRARIES
     Qt5::Core
@@ -125,6 +126,7 @@ set( QT_LINK_LIBRARIES
     Qt5::Svg
     Qt5::OpenGL
     Qt5::WebSockets
+    Qt5::SerialPort
     )
 
 
@@ -269,6 +271,7 @@ add_subdirectory( plotjuggler_plugins/DataStreamWebsocket )
 add_subdirectory( plotjuggler_plugins/DataStreamUDP )
 add_subdirectory( plotjuggler_plugins/DataStreamMQTT )
 add_subdirectory( plotjuggler_plugins/DataStreamZMQ )
+add_subdirectory( plotjuggler_plugins/DataStreamSerial )
 
 add_subdirectory( plotjuggler_plugins/StatePublisherCSV )
 add_subdirectory( plotjuggler_plugins/VideoViewer )
