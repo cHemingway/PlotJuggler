@@ -32,11 +32,6 @@ public:
     return false;
   }
 
-  virtual bool xmlSaveState(QDomDocument& doc,
-                            QDomElement& parent_element) const override;
-
-  virtual bool xmlLoadState(const QDomElement& parent_element) override;
-
 
 private:
   bool _running;
@@ -45,5 +40,4 @@ private:
 
   QSerialPort _serial;
 
-  void pushSingleCycle();
 };

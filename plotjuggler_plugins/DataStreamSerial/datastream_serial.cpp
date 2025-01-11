@@ -152,13 +152,3 @@ DataStreamSerial::~DataStreamSerial()
 {
   shutdown();
 }
-
-bool DataStreamSerial::xmlSaveState(QDomDocument& doc, QDomElement& parent_element) const
-{
-  return true; // TODO
-}
-
-bool DataStreamSerial::xmlLoadState(const QDomElement& parent_element)
-{
-  return true; // TODO
-}
