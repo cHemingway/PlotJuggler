@@ -138,11 +138,6 @@ The rest of this section assumes that you installed
 You need to install first [Qt](https://www.qt.io/download-open-source) and
 [git](https://desktop.github.com/).
 
-## Installing Qt
-- Download the Qt Online installer and run it, you will need to create an account
-- Qt 5.15 will not be shown by default, so you need to select "archive" packages and refresh
-      - Now you can install Qt5.15.2 OK
-
 **Visual studio 2019 (16)**, that is part of the Qt 5.15.x installation,
  will be used to compile PlotJuggler.
 
@@ -154,6 +149,12 @@ mkdir plotjuggler_ws
 cd plotjuggler_ws
 git clone https://github.com/facontidavide/PlotJuggler.git src/PlotJuggler
 ```
+
+
+## Installing Qt
+- Download the Qt Online installer and run it, you will need to create an account
+- Qt 5.15 will not be shown by default, so you need to select "archive" packages and refresh
+      - Now you can install Qt5.15.2 OK
 
 ## Build with Conan
 
@@ -178,6 +179,8 @@ cmake --build build/PlotJuggler --config Release --target install
 
 ## Build with vcpkg
 
+Running the shell "Qt 5.15.2 (MSVC 2019 64-bit)" (will be installed with Qt)
+
 Change the path where **vcpkg.cmake** can be found as needed.
 
 ```batch
@@ -190,6 +193,9 @@ cmake -G "Visual Studio 16" ^
 
 cmake --build build/PlotJuggler --config Release --target install
 ```
+
+## Run the EXE without an installer
+From the Qt shell, run `windeployqt.exe ./path/to/plotjuggler.exe`
 
 ## Create a Windows installer
 
