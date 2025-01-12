@@ -40,4 +40,9 @@ private:
 
   QSerialPort _serial;
 
+private slots:
+  void processSerial();
+
+  void serialError(QSerialPort::SerialPortError error);
+  
 };

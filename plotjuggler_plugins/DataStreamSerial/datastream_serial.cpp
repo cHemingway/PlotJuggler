@@ -159,7 +159,9 @@ bool DataStreamSerial::start(QStringList*)
     return false;
   }
 
-  // TODO: Start a thread that reads from the serial port
+  // Connect the serial port up to the slots
+  connect(&_serial, &QSerialPort::readyRead, this, &DataStreamSerial::processSerial);
+  connect(&_serial, &QSerialPort::errorOccurred, this, &DataStreamSerial::serialError);
 
   _running = true;
   return _running;
@@ -179,4 +181,56 @@ bool DataStreamSerial::isRunning() const
 DataStreamSerial::~DataStreamSerial()
 {
   shutdown();
+}
+
+void DataStreamSerial::processSerial()
+{
+  while (_serial.canReadLine())
+  {
+    QByteArray line = _serial.readLine();
+
+    using namespace std::chrono;
+    auto ts = high_resolution_clock::now().time_since_epoch();
+    double timestamp = 1e-6 * double(duration_cast<microseconds>(ts).count());
+
+    QByteArray m = line.data();
+    MessageRef msg(reinterpret_cast<uint8_t*>(m.data()), m.count());
+
+    try
+    {
+      std::lock_guard<std::mutex> lock(mutex());
+      // important use the mutex to protect any access to the data
+      _parser->parseMessage(msg, timestamp);
+    }
+    catch (std::exception& err)
+    {
+      return;
+      QMessageBox::warning(nullptr, tr("Serial Port"),
+                           tr("Problem parsing the message. Serial Port will be "
+                              "closed.\n%1")
+                               .arg(err.what()),
+                           QMessageBox::Ok);
+      shutdown();
+      // notify the GUI
+      emit closed();
+      return;
+    }
+
+    // notify the GUI
+    emit dataReceived();
+    return;
+  }
+}
+
+
+void DataStreamSerial::serialError(QSerialPort::SerialPortError error)
+{
+  if (_running) { // Ignore errors if already stopped running to avoid repeats
+    QMessageBox::warning(nullptr, "Serial Client",
+                       QString("Serial port error: %1").arg(_serial.errorString()),
+                       QMessageBox::Ok);
+    shutdown();
+    // notify the GUI
+    emit closed();
+  }
 }
