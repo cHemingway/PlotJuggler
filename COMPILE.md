@@ -138,6 +138,11 @@ The rest of this section assumes that you installed
 You need to install first [Qt](https://www.qt.io/download-open-source) and
 [git](https://desktop.github.com/).
 
+## Installing Qt
+- Download the Qt Online installer and run it, you will need to create an account
+- Qt 5.15 will not be shown by default, so you need to select "archive" packages and refresh
+      - Now you can install Qt5.15.2 OK
+
 **Visual studio 2019 (16)**, that is part of the Qt 5.15.x installation,
  will be used to compile PlotJuggler.
 
