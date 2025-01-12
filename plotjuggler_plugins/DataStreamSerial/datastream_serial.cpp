@@ -93,6 +93,35 @@ bool DataStreamSerial::start(QStringList*)
     protocol = "json";
   }
 
+  dialog.ui->comboBoxPort->setEditText(port_str);
+  dialog.ui->comboBoxBaud->setEditText(settings.value("Serial::baud").toString());
+
+  // Show extra parser options when selected
+  ParserFactoryPlugin::Ptr parser_creator;
+
+  auto onComboChanged = [&](const QString& selected_protocol) {
+    if (parser_creator)
+    {
+      if (auto prev_widget = parser_creator->optionsWidget())
+      {
+        prev_widget->setVisible(false);
+      }
+    }
+    parser_creator = parserFactories()->at(selected_protocol);
+
+    if (auto widget = parser_creator->optionsWidget())
+    {
+      widget->setVisible(true);
+    }
+  };
+
+  connect(dialog.ui->comboBoxProtocol,
+          qOverload<const QString&>(&QComboBox::currentIndexChanged), this,
+          onComboChanged);
+
+  dialog.ui->comboBoxProtocol->setCurrentText(protocol);
+  onComboChanged(protocol);
+
   // Create and show dialog
   int res = dialog.exec();
   if (res == QDialog::Rejected)
@@ -106,7 +135,6 @@ bool DataStreamSerial::start(QStringList*)
   protocol = dialog.ui->comboBoxProtocol->currentText();
   baud = dialog.ui->comboBoxBaud->currentText().toUInt();
 
-  ParserFactoryPlugin::Ptr parser_creator;
   _parser = parser_creator->createParser({}, {}, {}, dataMap());
 
   // Save back to settings
